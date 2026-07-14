@@ -44,7 +44,7 @@ This spins a temporary container, runs `generate-user-api-key` interactively (pa
 The script prints the exact `/mcp add` command to run inside OMP:
 
 ```
-/mcp add discourse --scope user -- npx -y @discourse/mcp@latest --allow_writes --read_only=false --site "https://..." --profile ~/.omp/mcp-keys/discourse-mcp-key.json
+/mcp add discourse --scope user -- npx -y @discourse/mcp@latest --allow_writes --read_only=false --site "https://..." --profile /home/bun/.omp/mcp-keys/discourse-mcp-key.json
 ```
 
 Verify with `/mcp list` and `/mcp test discourse`.
