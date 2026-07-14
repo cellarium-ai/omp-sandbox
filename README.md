@@ -65,6 +65,21 @@ If `mcp.json` references absolute host paths (e.g. `~/.omp/mcp-keys/...`), chang
 
 ---
 
+## API keys (Anthropic, OpenAI, Google)
+
+No browser login needed. The launcher forwards API keys directly from your host environment:
+
+```bash
+# Add to ~/.zshrc, then: source ~/.zshrc
+export ANTHROPIC_API_KEY="sk-ant-..."
+export OPENAI_API_KEY="sk-..."
+export GOOGLE_API_KEY="..."
+```
+
+OMP picks them up on startup. Any key that isn't set is passed as an empty string and ignored.
+
+---
+
 ## Usage
 
 ```bash
