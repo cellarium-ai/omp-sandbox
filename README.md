@@ -138,15 +138,14 @@ Caps dropped (`--cap-drop=ALL`), `--security-opt=no-new-privileges`, pids/memory
 
 ---
 
-## Browser OAuth workaround
+## Browser OAuth login (Claude Pro/Max, ChatGPT, etc.)
 
-If OMP's OAuth callback fails because the browser opens `localhost:<port>` on the host but the callback server is inside the container, open a second terminal and run:
+OMP's OAuth callback server binds to `localhost` inside the container, so the browser redirect to `localhost:<port>/callback?...` will show **connection refused**. No port forwarding or second terminal needed — OMP supports a paste flow for all subscription providers (Anthropic, OpenAI Codex, GitLab, Google Gemini CLI, and others):
 
-```bash
-docker exec -it <container-name> bash
-curl 'http://localhost:<port>/callback?code=...&state=...'
-```
+1. Run `/login <provider>` inside OMP. A URL is printed — open it in your browser.
+2. Approve the login on the provider's site.
+3. The browser tries to redirect to `localhost:<port>/callback?code=...&state=...` and shows "connection refused" or "site can't be reached".
+4. **Copy the full URL from the browser's address bar** (it contains `?code=...&state=...`).
+5. Paste it into OMP's terminal prompt. OMP extracts the code and completes login.
 
-Use the exact URL from your browser's address bar, wrapped in single quotes. The container name is printed on startup (format: `omp-<project>-<pid>`).
-
-**Note:** the Discourse user API key flow (`chronicle-setup.sh`) is paste-based and does not use a localhost callback server — it works inside a container with no extra steps.
+The credentials are written to `/home/bun/.omp` and persist across container restarts.
