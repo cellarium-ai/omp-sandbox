@@ -38,13 +38,15 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/b
 RUN mkdir -p /workspace /home/bun/.omp /home/bun/.bun \
     && chown -R bun:bun /workspace /home/bun
 
+# Install globally as root so the binary links into /usr/local/bin (root-writable).
+# BUN_INSTALL=/usr/local → package in /usr/local/lib/bun, binary in /usr/local/bin.
+RUN BUN_INSTALL=/usr/local bun install -g @oh-my-pi/pi-coding-agent
+
 USER bun
 
 ENV HOME=/home/bun
 ENV BUN_INSTALL=/home/bun/.bun
 ENV PATH=/home/bun/.bun/bin:/usr/local/bin:/home/bun/.local/bin:$PATH
-
-RUN bun install -g @oh-my-pi/pi-coding-agent
 
 WORKDIR /workspace
 
