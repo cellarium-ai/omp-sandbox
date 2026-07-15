@@ -83,18 +83,8 @@ docker run --rm -it \
 
 ## Updating OMP
 
-The OMP binary lives in the Docker named volume `omp-sandbox-bun`. Updates made inside a container persist across restarts.
-
-To update inside a running session:
 ```bash
-bun install -g @oh-my-pi/pi-coding-agent
-```
-
-To update without starting a full session:
-```bash
-docker run --rm \
-  --mount type=volume,src=omp-sandbox-bun,dst=/home/bun/.bun \
-  omp-sandbox bash -c "bun install -g @oh-my-pi/pi-coding-agent"
+./omp-update.sh
 ```
 
 To reset to the version baked into the image (e.g. after a rebuild):
