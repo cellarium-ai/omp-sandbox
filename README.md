@@ -2,6 +2,27 @@
 
 A shareable Docker sandbox for [Oh My Pi](https://ohmypi.ai). Clone and run one command to get an isolated OMP environment with persistent state and a named volume for the OMP binary.
 
+## Usage
+
+```bash
+# Single project — mounts myproject at /workspace/project
+omp-sandbox /path/to/myproject
+
+# Projects root + subdir — mounts projects at /workspace/projects, opens in myproject
+omp-sandbox ~/dev/projects myproject
+```
+
+OMP opens immediately. For a bash shell instead (e.g. to debug):
+
+```bash
+docker run --rm -it \
+  --mount type=volume,src=omp-sandbox-bun,dst=/home/bun/.bun \
+  --mount type=bind,src="$OMP_HOME_MOUNT_PATH",dst=/home/bun/.omp \
+  omp-sandbox bash
+```
+
+---
+
 ## Installation
 
 ```bash
@@ -57,27 +78,6 @@ export GOOGLE_API_KEY="..."
 ```
 
 OMP picks them up on startup. Any key that isn't set is passed as an empty string and ignored.
-
----
-
-## Usage
-
-```bash
-# Single project — mounts myproject at /workspace/project
-omp-sandbox /path/to/myproject
-
-# Projects root + subdir — mounts projects at /workspace/projects, opens in myproject
-omp-sandbox ~/dev/projects myproject
-```
-
-OMP opens immediately. For a bash shell instead (e.g. to debug):
-
-```bash
-docker run --rm -it \
-  --mount type=volume,src=omp-sandbox-bun,dst=/home/bun/.bun \
-  --mount type=bind,src="$OMP_HOME_MOUNT_PATH",dst=/home/bun/.omp \
-  omp-sandbox bash
-```
 
 ---
 
