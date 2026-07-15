@@ -31,26 +31,6 @@ alias omp-sandbox="/Users/you/omp-sandbox-repo/omp-sandbox.sh"
 
 ---
 
-## Chronicle (Discourse)
-
-Run once on the host (before or between OMP sessions):
-
-```bash
-./chronicle-setup.sh https://your-discourse-site.example.com
-```
-
-This spins a temporary container, runs `generate-user-api-key` interactively (paste-based — no localhost server, no port forwarding), and saves the credential to `$OMP_HOME_MOUNT_PATH/mcp-keys/discourse-mcp-key.json`. The key is immediately available inside every sandbox session as `/home/bun/.omp/mcp-keys/discourse-mcp-key.json`.
-
-The script prints the exact `/mcp add` command to run inside OMP:
-
-```
-/mcp add discourse --scope user -- npx -y @discourse/mcp@latest --allow_writes --read_only=false --site "https://..." --profile /home/bun/.omp/mcp-keys/discourse-mcp-key.json
-```
-
-Verify with `/mcp list` and `/mcp test discourse`.
-
----
-
 ## Copying existing MCP keys
 
 If you already have MCP keys in `~/.omp/mcp-keys/` on the host:
