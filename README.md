@@ -120,12 +120,30 @@ Caps dropped (`--cap-drop=ALL`), `--security-opt=no-new-privileges`, pids/memory
 
 ## Browser OAuth login (Claude Pro/Max, ChatGPT, etc.)
 
-OMP's OAuth callback server binds to `localhost` inside the container, so the browser redirect to `localhost:<port>/callback?...` will show **connection refused**. No port forwarding or second terminal needed — OMP supports a paste flow for all subscription providers (Anthropic, OpenAI Codex, GitLab, Google Gemini CLI, and others):
+Use `omp-login.sh` instead of `omp-sandbox` when you need to authenticate a subscription provider. It bridges the OAuth callback port so the browser redirect reaches OMP directly — no second terminal, no paste needed.
 
-1. Run `/login <provider>` inside OMP. A URL is printed — open it in your browser.
-2. Approve the login on the provider's site.
-3. The browser tries to redirect to `localhost:<port>/callback?code=...&state=...` and shows "connection refused" or "site can't be reached".
-4. **Copy the full URL from the browser's address bar** (it contains `?code=...&state=...`).
-5. Paste it into OMP's terminal prompt. OMP extracts the code and completes login.
+```bash
+# Default: Anthropic
+omp-login
 
-The credentials are written to `/home/bun/.omp` and persist across container restarts.
+# Other providers
+omp-login openai-codex
+omp-login gemini-cli
+```
+
+Inside OMP, run `/login <provider>`. Approve in your browser — the callback hits OMP and login completes automatically. Credentials are saved to `/home/bun/.omp` and persist across sessions.
+
+**How it works:** OMP's callback server binds to `127.0.0.1:<port>` (loopback). Docker's `-p` can only reach `0.0.0.0`. `omp-login.sh` runs `socat` inside the container to bridge `0.0.0.0:<port+1> → 127.0.0.1:<port>`, then publishes `<port>:<port+1>` so the host browser's redirect flows through cleanly.
+
+Supported providers and their ports:
+
+| Provider | Port |
+|---|---|
+| `anthropic` | 54545 |
+| `openai-codex` | 1455 |
+| `gemini-cli` | 8085 |
+| `antigravity` | 51121 |
+| `gitlab` | 8080 |
+| `devin` | 59653 |
+
+After logging in, exit and start your normal session with `omp-sandbox`.
